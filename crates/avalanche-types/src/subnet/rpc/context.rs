@@ -6,6 +6,7 @@ use crate::{
         aliasreader::alias_reader_client::AliasReaderClient,
         keystore::keystore_client::KeystoreClient,
         sharedmemory::shared_memory_client::SharedMemoryClient,
+        warp::signer_client::SignerClient
     },
 };
 use tonic::transport::Channel;
@@ -23,6 +24,7 @@ pub struct Context<S: validators::State> {
     pub c_chain_id: Id,
     pub avax_asset_id: Id,
     pub keystore: KeystoreClient<Channel>,
+    pub wrap: SignerClient<Channel>,
     pub shared_memory: SharedMemoryClient<Channel>,
     pub bc_lookup: AliasReaderClient<Channel>,
     pub chain_data_dir: String,
