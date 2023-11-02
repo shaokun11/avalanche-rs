@@ -4,13 +4,13 @@ members = [
     "core/network",
     "core/server",
     "crates/avalanche-consensus",
-    "crates/avalanche-types-me",
+    "crates/avalanche-types",
     "tests/avalanche-e2e",
     "tests/avalanchego-byzantine",
     "tests/avalanchego-conformance",
 ]
 # by default, only document and build key library crates
-default-members = ["crates/avalanche-types-me", "crates/avalanche-consensus"]
+default-members = ["crates/avalanche-types", "crates/avalanche-consensus"]
 resolver = "2"
 
 [workspace.package]
