@@ -7,7 +7,6 @@ publish = true
 description = "Avalanche primitive types in Rust"
 license-file = "LICENSE"
 homepage = "https://avax.network"
-repository = "https://github.com/ava-labs/avalanche-rs/tree/main/crates/avalanche-types"
 readme = "README.md"
 
 [dependencies]
