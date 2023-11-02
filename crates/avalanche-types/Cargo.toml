@@ -3,12 +3,7 @@ name = "avalanche-types"
 version = "0.1.4" # https://crates.io/crates/avalanche-types
 edition = "2021"
 rust-version = "1.70" # use "rustup override set stable" to overwrite current toolchain
-publish = true
-description = "Avalanche primitive types in Rust"
-license-file = "LICENSE"
-homepage = "https://avax.network"
-repository = "https://github.com/ava-labs/avalanche-rs/tree/main/crates/avalanche-types"
-readme = "README.md"
+
 
 [dependencies]
 async-trait = "0.1.73" # for "key::secp256k1" sign trait, https://github.com/dtolnay/async-trait
