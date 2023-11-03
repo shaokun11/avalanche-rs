@@ -46,6 +46,7 @@ use tokio::sync::{broadcast, mpsc, RwLock};
 use tonic::{Request, Response};
 use crate::proto::warp::signer_client::SignerClient;
 use crate::proto::warp::SignRequest;
+use crate::subnet::rpc::wrap::client::WrapSignerClient;
 
 pub struct Server<V> {
     /// Underlying Vm implementation.
@@ -125,7 +126,6 @@ where
         let keystore = KeystoreClient::new(client_conn.clone());
         let shared_memory = SharedMemoryClient::new(client_conn.clone());
         let bc_lookup = AliasReaderClient::new(client_conn.clone());
-        let wrap_signer = SignerClient::new(client_conn.clone());
         let ctx: Option<Context<ValidatorStateClient>> = Some(Context {
             network_id: req.network_id,
             subnet_id: ids::Id::from_slice(&req.subnet_id),
@@ -135,7 +135,6 @@ where
             c_chain_id: ids::Id::from_slice(&req.c_chain_id),
             avax_asset_id: ids::Id::from_slice(&req.avax_asset_id),
             keystore,
-            wrap: wrap_signer,
             shared_memory,
             bc_lookup,
             chain_data_dir: req.chain_data_dir,
@@ -197,6 +196,7 @@ where
                 tx_engine,
                 &[()],
                 AppSenderClient::new(client_conn.clone()),
+                WrapSignerClient::new(client_conn.clone()),
             )
             .await
             .map_err(|e| tonic::Status::unknown(e.to_string()))?;
