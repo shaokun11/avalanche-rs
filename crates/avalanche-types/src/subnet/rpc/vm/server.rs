@@ -40,6 +40,7 @@ use semver::Version;
 use tokio::sync::{broadcast, mpsc, RwLock};
 use tonic::{Request, Response};
 use crate::warp::client::WarpSignerClient;
+use crate::warp::WarpSignerClient_;
 
 pub struct Server<V> {
     /// Underlying Vm implementation.
@@ -91,7 +92,7 @@ impl<V> Vm for Server<V>
         V: ChainVm<
             DatabaseManager=DatabaseManager,
             AppSender=AppSenderClient,
-            WarpSigner= WarpSignerClient,
+            WarpSigner=WarpSignerClient,
             ValidatorState=ValidatorStateClient,
         > + Send
         + Sync
@@ -183,6 +184,10 @@ impl<V> Vm for Server<V>
         let mut inner_vm = self.vm.write().await;
 
         let warp_signer = WarpSignerClient::new(client_conn.clone());
+        let signature = warp_signer.sign(req.network_id,
+                                         "2gLyawqthdiyrJktJmdnDAb1XVc6xwJXU6iJKu3Uwj21F2mXAK",
+                                         "hello world".as_bytes()).await;
+        println!("------warp_signer---signature--{:?}", signature.unwrap().signature);
         inner_vm
             .initialize(
                 ctx,

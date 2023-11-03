@@ -30,7 +30,7 @@ impl super::WarpSignerClient_ for WarpSignerClient {
         async fn sign(&self,
                   network_id: u32,
                   source_chain_id: &str,
-                  payload: Vec<u8>) -> Result<SignResponse> {
+                  payload: &[u8]) -> Result<SignResponse> {
         let mut client = self.inner.clone();
         let chain_id = String::from(source_chain_id);
         let res = client

@@ -9,7 +9,7 @@ pub trait WarpSignerClient_: Send + Sync + CloneBox {
         &self,
         network_id: u32,
         source_chain_id: &str,
-        payload: Vec<u8>,
+        payload: &[u8],
     ) -> Result<SignResponse>;
 }
 
