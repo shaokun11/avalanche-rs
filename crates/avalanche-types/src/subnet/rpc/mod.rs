@@ -10,7 +10,6 @@ pub mod snowman;
 pub mod utils;
 pub mod vm;
 
-pub mod warp;
 
 #[cfg(any(doc, feature = "subnet_metrics"))]
 pub mod metrics;

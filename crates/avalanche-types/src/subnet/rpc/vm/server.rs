@@ -44,9 +44,6 @@ use prost::bytes::Bytes;
 use semver::Version;
 use tokio::sync::{broadcast, mpsc, RwLock};
 use tonic::{Request, Response};
-use crate::proto::warp::signer_client::SignerClient;
-use crate::proto::warp::SignRequest;
-use crate::subnet::rpc::warp::client::WarpSignerClient;
 
 pub struct Server<V> {
     /// Underlying Vm implementation.
@@ -98,7 +95,6 @@ impl<V> Vm for Server<V>
         V: ChainVm<
             DatabaseManager=DatabaseManager,
             AppSender=AppSenderClient,
-            // WarpSigner=WarpSignerClient,
             ValidatorState=ValidatorStateClient,
         > + Send
         + Sync
@@ -187,7 +183,6 @@ impl<V> Vm for Server<V>
         });
 
         let mut inner_vm = self.vm.write().await;
-        // let warp_client = WarpSignerClient::new(client_conn.clone());
         inner_vm
             .initialize(
                 ctx,
@@ -198,7 +193,6 @@ impl<V> Vm for Server<V>
                 tx_engine,
                 &[()],
                 AppSenderClient::new(client_conn.clone()),
-                // warp_client,
             )
             .await
             .map_err(|e| tonic::Status::unknown(e.to_string()))?;
