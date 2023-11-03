@@ -98,7 +98,7 @@ impl<V> Vm for Server<V>
         V: ChainVm<
             DatabaseManager=DatabaseManager,
             AppSender=AppSenderClient,
-            WarpSigner=WarpSignerClient,
+            // WarpSigner=WarpSignerClient,
             ValidatorState=ValidatorStateClient,
         > + Send
         + Sync
