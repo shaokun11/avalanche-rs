@@ -98,6 +98,7 @@ where
     V: ChainVm<
             DatabaseManager = DatabaseManager,
             AppSender = AppSenderClient,
+            WrapSignerClient = WrapSignerClient,
             ValidatorState = ValidatorStateClient,
         > + Send
         + Sync
