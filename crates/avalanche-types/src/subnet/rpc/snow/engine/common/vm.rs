@@ -27,7 +27,7 @@ use tokio::sync::mpsc::Sender;
 pub trait CommonVm: AppHandler + Connector + Checkable {
     type DatabaseManager: Manager;
     type AppSender: AppSender;
-    type WrapSignerClient: WrapSignerClient;
+    type WrapSigner: WrapSignerClient;
     type ChainHandler: Handle;
     type StaticHandler: Handle;
     type ValidatorState: validators::State;
@@ -42,7 +42,7 @@ pub trait CommonVm: AppHandler + Connector + Checkable {
         to_engine: Sender<Message>,
         fxs: &[Fx],
         app_sender: Self::AppSender,
-        wrap_signer: Self::WrapSignerClient,
+        wrap_signer: Self::WrapSigner,
     ) -> Result<()>;
     async fn set_state(&self, state: State) -> Result<()>;
     async fn shutdown(&self) -> Result<()>;
