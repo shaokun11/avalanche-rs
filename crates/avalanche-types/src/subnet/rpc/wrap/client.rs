@@ -32,7 +32,7 @@ impl super::WrapSignerClient for WrapSignerClient {
                   source_chain_id: &str,
                   payload: Vec<u8>) -> Result<SignResponse> {
         let mut client = self.inner.clone();
-        let chain_id = source_chain_id.into_string();
+        let chain_id = String::from(source_chain_id);
         let res = client
             .sign(SignRequest {
                 network_id,
