@@ -187,7 +187,7 @@ impl<V> Vm for Server<V>
         });
 
         let mut inner_vm = self.vm.write().await;
-        let warp_client = WarpSignerClient::new(client_conn.clone());
+        // let warp_client = WarpSignerClient::new(client_conn.clone());
         inner_vm
             .initialize(
                 ctx,
