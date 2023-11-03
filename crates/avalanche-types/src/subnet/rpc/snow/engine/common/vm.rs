@@ -27,7 +27,7 @@ use tokio::sync::mpsc::Sender;
 pub trait CommonVm: AppHandler + Connector + Checkable {
     type DatabaseManager: Manager;
     type AppSender: AppSender;
-    type WrapSigner: WarpSignerClient;
+    type WarpSigner: WarpSignerClient;
     type ChainHandler: Handle;
     type StaticHandler: Handle;
     type ValidatorState: validators::State;
