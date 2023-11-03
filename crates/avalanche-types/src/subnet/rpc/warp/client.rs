@@ -11,11 +11,11 @@ use prost::bytes::Bytes;
 use tonic::transport::Channel;
 
 #[derive(Clone)]
-pub struct WrapSignerClient {
+pub struct WarpSignerClient {
     inner: signer_client::SignerClient<Channel>,
 }
 
-impl WrapSignerClient {
+impl WarpSignerClient {
     pub fn new(client_conn: Channel) -> Self {
         Self {
             inner: signer_client::SignerClient::new(client_conn)
@@ -26,7 +26,7 @@ impl WrapSignerClient {
 }
 
 #[tonic::async_trait]
-impl super::WrapSignerClient for WrapSignerClient {
+impl super::WarpSignerClient for WarpSignerClient {
     async fn sign(&self,
                   network_id: u32,
                   source_chain_id: &str,

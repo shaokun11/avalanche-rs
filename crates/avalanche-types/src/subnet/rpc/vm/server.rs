@@ -46,7 +46,7 @@ use tokio::sync::{broadcast, mpsc, RwLock};
 use tonic::{Request, Response};
 use crate::proto::warp::signer_client::SignerClient;
 use crate::proto::warp::SignRequest;
-use crate::subnet::rpc::wrap::client::WrapSignerClient;
+use crate::subnet::rpc::warp::client::WarpSignerClient;
 
 pub struct Server<V> {
     /// Underlying Vm implementation.
@@ -94,12 +94,12 @@ impl<V: ChainVm> Server<V> {
 
 #[tonic::async_trait]
 impl<V> Vm for Server<V>
-where
-    V: ChainVm<
-            DatabaseManager = DatabaseManager,
-            AppSender = AppSenderClient,
-            WrapSigner = WrapSignerClient,
-            ValidatorState = ValidatorStateClient,
+    where
+        V: ChainVm<
+            DatabaseManager=DatabaseManager,
+            AppSender=AppSenderClient,
+            WrapSigner=WarpSignerClient,
+            ValidatorState=ValidatorStateClient,
         > + Send
         + Sync
         + 'static,
@@ -187,6 +187,7 @@ where
         });
 
         let mut inner_vm = self.vm.write().await;
+        let warp_client = WarpSignerClient::new(client_conn.clone());
         inner_vm
             .initialize(
                 ctx,
@@ -197,7 +198,7 @@ where
                 tx_engine,
                 &[()],
                 AppSenderClient::new(client_conn.clone()),
-                WrapSignerClient::new(client_conn.clone()),
+                warp_client,
             )
             .await
             .map_err(|e| tonic::Status::unknown(e.to_string()))?;
@@ -859,7 +860,7 @@ where
         let metric_families = crate::subnet::rpc::metrics::MetricsFamilies::from(
             &self.process_metrics.read().await.gather(),
         )
-        .mfs;
+            .mfs;
 
         Ok(Response::new(vm::GatherResponse { metric_families }))
     }
@@ -1013,7 +1014,7 @@ where
                 return Ok(Response::new(vm::GetBlockIdAtHeightResponse {
                     blk_id: height.to_vec().into(),
                     err: 0,
-                }))
+                }));
             }
             Err(e) => {
                 if error_to_error_code(&e.to_string()) != 0 {
