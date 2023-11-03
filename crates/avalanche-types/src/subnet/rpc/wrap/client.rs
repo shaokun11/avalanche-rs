@@ -35,7 +35,7 @@ impl super::WrapSignerClient for WrapSignerClient {
         let res = client
             .sign(SignRequest {
                 network_id,
-                source_chain_id: Bytes::from(source_chain_id.to_vec()),
+                source_chain_id: Bytes::from(source_chain_id.as_bytes()),
                 payload: Bytes::from(payload),
             })
             .await
