@@ -18,6 +18,7 @@ use crate::{
     },
 };
 use tokio::sync::mpsc::Sender;
+use crate::warp::WarpSignerClient;
 
 /// Vm describes the trait that all consensus VMs must implement.
 ///
@@ -26,6 +27,7 @@ use tokio::sync::mpsc::Sender;
 pub trait CommonVm: AppHandler + Connector + Checkable {
     type DatabaseManager: Manager;
     type AppSender: AppSender;
+    type WarpSigner: WarpSignerClient;
     type ChainHandler: Handle;
     type StaticHandler: Handle;
     type ValidatorState: validators::State;
@@ -40,6 +42,7 @@ pub trait CommonVm: AppHandler + Connector + Checkable {
         to_engine: Sender<Message>,
         fxs: &[Fx],
         app_sender: Self::AppSender,
+        warp_signer: Self::WarpSigner,
     ) -> Result<()>;
     async fn set_state(&self, state: State) -> Result<()>;
     async fn shutdown(&self) -> Result<()>;

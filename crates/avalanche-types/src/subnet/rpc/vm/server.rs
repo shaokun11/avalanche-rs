@@ -92,11 +92,12 @@ impl<V: ChainVm> Server<V> {
 
 #[tonic::async_trait]
 impl<V> Vm for Server<V>
-where
-    V: ChainVm<
-            DatabaseManager = DatabaseManager,
-            AppSender = AppSenderClient,
-            ValidatorState = ValidatorStateClient,
+    where
+        V: ChainVm<
+            DatabaseManager=DatabaseManager,
+            AppSender=AppSenderClient,
+            WarpSigner=WarpSignerClient,
+            ValidatorState=ValidatorStateClient,
         > + Send
         + Sync
         + 'static,
@@ -198,6 +199,7 @@ where
                 tx_engine,
                 &[()],
                 AppSenderClient::new(client_conn.clone()),
+                warp_signer,
             )
             .await
             .map_err(|e| tonic::Status::unknown(e.to_string()))?;
@@ -861,7 +863,7 @@ where
         let metric_families = crate::subnet::rpc::metrics::MetricsFamilies::from(
             &self.process_metrics.read().await.gather(),
         )
-        .mfs;
+            .mfs;
 
         Ok(Response::new(vm::GatherResponse { metric_families }))
     }
@@ -1015,7 +1017,7 @@ where
                 return Ok(Response::new(vm::GetBlockIdAtHeightResponse {
                     blk_id: height.to_vec().into(),
                     err: 0,
-                }))
+                }));
             }
             Err(e) => {
                 if error_to_error_code(&e.to_string()) != 0 {
