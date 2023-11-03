@@ -198,7 +198,7 @@ impl<V> Vm for Server<V>
                 tx_engine,
                 &[()],
                 AppSenderClient::new(client_conn.clone()),
-                warp_client,
+                // warp_client,
             )
             .await
             .map_err(|e| tonic::Status::unknown(e.to_string()))?;
