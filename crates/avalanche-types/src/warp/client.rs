@@ -1,4 +1,5 @@
 use std::io::{Error, ErrorKind, Read, Result};
+use std::str::FromStr;
 
 use crate::{
     proto::pb::warp::{
@@ -9,6 +10,7 @@ use crate::{
 };
 use prost::bytes::Bytes;
 use tonic::transport::Channel;
+use crate::ids::Id;
 
 #[derive(Clone)]
 pub struct WarpSignerClient {
@@ -27,7 +29,7 @@ impl WarpSignerClient {
 
 #[tonic::async_trait]
 impl super::WarpSignerClient_ for WarpSignerClient {
-        async fn sign(&self,
+    async fn sign(&self,
                   network_id: u32,
                   source_chain_id: &str,
                   payload: &[u8]) -> Result<SignResponse> {
@@ -36,7 +38,7 @@ impl super::WarpSignerClient_ for WarpSignerClient {
         let res = client
             .sign(SignRequest {
                 network_id,
-                source_chain_id: Bytes::from(chain_id),
+                source_chain_id: Bytes::from(Id::from_str(source_chain_id).unwrap().to_vec()),
                 payload: Bytes::from(payload.to_vec()),
             })
             .await
