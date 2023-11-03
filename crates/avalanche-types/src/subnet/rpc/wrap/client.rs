@@ -1,4 +1,4 @@
-use std::io::{Error, ErrorKind, Result};
+use std::io::{Error, ErrorKind, Read, Result};
 
 use crate::{
     proto::pb::warp::{
@@ -32,10 +32,11 @@ impl super::WrapSignerClient for WrapSignerClient {
                   source_chain_id: &str,
                   payload: Vec<u8>) -> Result<SignResponse> {
         let mut client = self.inner.clone();
+        let chain_id = source_chain_id.into_string();
         let res = client
             .sign(SignRequest {
                 network_id,
-                source_chain_id: Bytes::from(source_chain_id.as_bytes()),
+                source_chain_id: Bytes::from(chain_id),
                 payload: Bytes::from(payload),
             })
             .await
