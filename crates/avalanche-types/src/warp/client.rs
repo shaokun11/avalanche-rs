@@ -37,7 +37,7 @@ impl super::WarpSignerClient_ for WarpSignerClient {
             .sign(SignRequest {
                 network_id,
                 source_chain_id: Bytes::from(chain_id),
-                payload: Bytes::from(payload),
+                payload: Bytes::from(payload.to_vec()),
             })
             .await
             .map_err(|e| {
