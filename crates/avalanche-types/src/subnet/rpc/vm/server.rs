@@ -44,6 +44,7 @@ use prost::bytes::Bytes;
 use semver::Version;
 use tokio::sync::{broadcast, mpsc, RwLock};
 use tonic::{Request, Response};
+use crate::warp::client::WarpSignerClient;
 
 pub struct Server<V> {
     /// Underlying Vm implementation.
@@ -184,6 +185,9 @@ where
         });
 
         let mut inner_vm = self.vm.write().await;
+
+        let warp_signer = WarpSignerClient::new(client_conn.clone());
+
         inner_vm
             .initialize(
                 ctx,
