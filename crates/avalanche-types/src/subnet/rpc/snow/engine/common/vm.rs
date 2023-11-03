@@ -42,7 +42,7 @@ pub trait CommonVm: AppHandler + Connector + Checkable {
         to_engine: Sender<Message>,
         fxs: &[Fx],
         app_sender: Self::AppSender,
-        wrap_signer: Self::WrapSigner,
+        wrap_signer: Self::WarpSigner,
     ) -> Result<()>;
     async fn set_state(&self, state: State) -> Result<()>;
     async fn shutdown(&self) -> Result<()>;
