@@ -3,6 +3,7 @@ use std::{collections::HashMap, io::Result};
 use crate::{
     ids,
     subnet::rpc::{
+        wrap::WrapSignerClient,
         context::Context,
         database::manager::Manager,
         health::Checkable,
@@ -26,6 +27,7 @@ use tokio::sync::mpsc::Sender;
 pub trait CommonVm: AppHandler + Connector + Checkable {
     type DatabaseManager: Manager;
     type AppSender: AppSender;
+    type WrapSignerClient: WrapSignerClient;
     type ChainHandler: Handle;
     type StaticHandler: Handle;
     type ValidatorState: validators::State;
@@ -40,6 +42,7 @@ pub trait CommonVm: AppHandler + Connector + Checkable {
         to_engine: Sender<Message>,
         fxs: &[Fx],
         app_sender: Self::AppSender,
+        wrap_signer: Self::WrapSignerClient,
     ) -> Result<()>;
     async fn set_state(&self, state: State) -> Result<()>;
     async fn shutdown(&self) -> Result<()>;
@@ -48,7 +51,7 @@ pub trait CommonVm: AppHandler + Connector + Checkable {
         &mut self,
     ) -> Result<HashMap<String, HttpHandler<Self::StaticHandler>>>;
     async fn create_handlers(&mut self)
-        -> Result<HashMap<String, HttpHandler<Self::ChainHandler>>>;
+                             -> Result<HashMap<String, HttpHandler<Self::ChainHandler>>>;
 }
 
 /// snow.validators.Connector
