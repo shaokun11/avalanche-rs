@@ -4,40 +4,35 @@ use std::{
     time::{Duration, Instant},
 };
 
-use crate::{
-    ids,
-    packer::U32_LEN,
-    proto::pb::{
+use crate::{ids, packer::U32_LEN, proto::pb::{
+    self,
+    aliasreader::alias_reader_client::AliasReaderClient,
+    google::protobuf::Empty,
+    keystore::keystore_client::KeystoreClient,
+    messenger::{messenger_client::MessengerClient, NotifyRequest},
+    sharedmemory::shared_memory_client::SharedMemoryClient,
+    vm,
+}, subnet::rpc::{
+    consensus::snowman::{Block, Decidable},
+    context::Context,
+    database::rpcdb::{client::DatabaseClient, error_to_error_code},
+    database::{
+        corruptabledb,
+        manager::{versioned_database, DatabaseManager},
+    },
+    errors,
+    http::server::Server as HttpServer,
+    snow::{
+        engine::common::{appsender::client::AppSenderClient, message::Message},
+        validators::client::ValidatorStateClient,
+        State,
+    },
+    snowman::block::ChainVm,
+    utils::{
         self,
-        aliasreader::alias_reader_client::AliasReaderClient,
-        google::protobuf::Empty,
-        keystore::keystore_client::KeystoreClient,
-        messenger::{messenger_client::MessengerClient, NotifyRequest},
-        sharedmemory::shared_memory_client::SharedMemoryClient,
-        vm,
+        grpc::{self, timestamp_from_time},
     },
-    subnet::rpc::{
-        consensus::snowman::{Block, Decidable},
-        context::Context,
-        database::rpcdb::{client::DatabaseClient, error_to_error_code},
-        database::{
-            corruptabledb,
-            manager::{versioned_database, DatabaseManager},
-        },
-        errors,
-        http::server::Server as HttpServer,
-        snow::{
-            engine::common::{appsender::client::AppSenderClient, message::Message},
-            validators::client::ValidatorStateClient,
-            State,
-        },
-        snowman::block::ChainVm,
-        utils::{
-            self,
-            grpc::{self, timestamp_from_time},
-        },
-    },
-};
+}, warp};
 use chrono::{TimeZone, Utc};
 use pb::vm::vm_server::Vm;
 use prost::bytes::Bytes;
@@ -96,7 +91,7 @@ impl<V> Vm for Server<V>
         V: ChainVm<
             DatabaseManager=DatabaseManager,
             AppSender=AppSenderClient,
-            WarpSigner=WarpSignerClient,
+            WarpSigner= WarpSignerClient,
             ValidatorState=ValidatorStateClient,
         > + Send
         + Sync
@@ -188,7 +183,6 @@ impl<V> Vm for Server<V>
         let mut inner_vm = self.vm.write().await;
 
         let warp_signer = WarpSignerClient::new(client_conn.clone());
-
         inner_vm
             .initialize(
                 ctx,

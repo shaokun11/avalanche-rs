@@ -26,8 +26,8 @@ impl WarpSignerClient {
 }
 
 #[tonic::async_trait]
-impl super::WarpSignerClient for WarpSignerClient {
-    async fn sign(&self,
+impl super::WarpSignerClient_ for WarpSignerClient {
+        async fn sign(&self,
                   network_id: u32,
                   source_chain_id: &str,
                   payload: Vec<u8>) -> Result<SignResponse> {

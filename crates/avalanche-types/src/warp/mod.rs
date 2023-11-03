@@ -4,7 +4,7 @@ use std::io::Result;
 use crate::proto::warp::SignResponse;
 
 #[tonic::async_trait]
-pub trait WarpSignerClient: Send + Sync + CloneBox {
+pub trait WarpSignerClient_: Send + Sync + CloneBox {
     async fn sign(
         &self,
         network_id: u32,
@@ -14,20 +14,20 @@ pub trait WarpSignerClient: Send + Sync + CloneBox {
 }
 
 pub trait CloneBox {
-    fn clone_box(&self) -> Box<dyn WarpSignerClient + Send + Sync>;
+    fn clone_box(&self) -> Box<dyn WarpSignerClient_ + Send + Sync>;
 }
 
 impl<T> CloneBox for T
     where
-        T: 'static + WarpSignerClient + Clone + Send + Sync,
+        T: 'static + WarpSignerClient_ + Clone + Send + Sync,
 {
-    fn clone_box(&self) -> Box<dyn WarpSignerClient + Send + Sync> {
+    fn clone_box(&self) -> Box<dyn WarpSignerClient_ + Send + Sync> {
         Box::new(self.clone())
     }
 }
 
-impl Clone for Box<dyn WarpSignerClient + Send + Sync> {
-    fn clone(&self) -> Box<dyn WarpSignerClient + Send + Sync> {
+impl Clone for Box<dyn WarpSignerClient_ + Send + Sync> {
+    fn clone(&self) -> Box<dyn WarpSignerClient_ + Send + Sync> {
         self.clone_box()
     }
 }
