@@ -18,7 +18,7 @@ use crate::{
     },
 };
 use tokio::sync::mpsc::Sender;
-use crate::warp::{WarpSignerClient_};
+use crate::warp::WarpSignerClient_;
 
 /// Vm describes the trait that all consensus VMs must implement.
 ///

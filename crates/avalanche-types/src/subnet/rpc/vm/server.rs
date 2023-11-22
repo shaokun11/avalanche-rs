@@ -40,7 +40,6 @@ use semver::Version;
 use tokio::sync::{broadcast, mpsc, RwLock};
 use tonic::{Request, Response};
 use crate::warp::client::WarpSignerClient;
-use crate::warp::WarpSignerClient_;
 
 pub struct Server<V> {
     /// Underlying Vm implementation.
